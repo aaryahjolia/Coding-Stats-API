@@ -133,7 +133,14 @@ app.get('/:platform/:handle', async (req, res) => {
 
 app.get('/', (req, res) => {
     res.status(200).send("Home Page of API");
-})
+});
+
+app.all('*', (req, res) => { 
+    res.status(404).send({
+        success: false,
+        error: "Invalid Request"
+    }); 
+}); 
 
 const PORT = process.env.PORT || 8800;
 app.listen(PORT, ()=>{
