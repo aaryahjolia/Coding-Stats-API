@@ -1,8 +1,11 @@
 const axios = require('axios');
 const jsdom = require("jsdom");
 const express = require('express')
+var cors = require('cors')
 const app = express();
 const { JSDOM } = jsdom;
+
+app.use(cors())
 
 // Check for user 'af' to test for new users
 let leet = require('./Platforms/leetcode');
