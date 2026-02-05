@@ -1,23 +1,6 @@
-// Contest History Query
-const historyQuery = `
-querygetUserProfile($username: String!) {
-  userContestRankingHistory(username: $username) {
-    attended
-    trendDirection
-    problemsSolved
-    totalProblems
-    finishTimeInSeconds
-    rating
-    ranking
-    contest {
-      title
-      startTime
-    }
-  }
-}
-`
+const axios = require('axios');
+const config = require('../config');
 
-//graphql query
 const query = `
 query getUserProfile($username: String!, $limit: Int!, $year: Int) {
     userContestRanking(username: $username) {
@@ -104,39 +87,30 @@ query getUserProfile($username: String!, $limit: Int!, $year: Int) {
       timestamp
     }
   }
-  
 `;
 
-//fetching the data
-exports.leetcode = (req, res) => {
-    let user = req.params.handle;
-    fetch("https://leetcode.com/graphql", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Referer: "https://leetcode.com",
-        },
-        body: JSON.stringify({
+exports.fetchData = async (handle) => {
+    try {
+        const { data } = await axios.post(config.PLATFORMS.LEETCODE, {
             query: query,
             variables: {
-                username: user,
+                username: handle,
                 limit: 5,
-                year: 2024
+                year: new Date().getFullYear()
             },
-        }),
-    })
-        .then((result) => result.json())
-        .then((data) => {
-            if (data.errors) {
-                res.send({
-                    success: false
-                });
-            } else {
-                res.send(data);
+        }, {
+            headers: {
+                "Content-Type": "application/json",
+                Referer: "https://leetcode.com",
             }
-        })
-        .catch((err) => {
-            console.error("Error", err);
-            res.send(err);
         });
+
+        if (data.errors) {
+            throw new Error("Username not found on LeetCode");
+        }
+
+        return data;
+    } catch (error) {
+        throw new Error(error.message || "Error fetching data from LeetCode");
+    }
 };
