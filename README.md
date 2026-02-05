@@ -47,6 +47,7 @@ I used `node-cache` to store responses in memory for 1 hour. This saves time and
 
 ### Base URL
 `http://localhost:8800` (for local builds)
+
 `https://coding-stats-api.vercel.app/` (production deployment)
 
 ### Endpoints
@@ -69,4 +70,5 @@ I used `node-cache` to store responses in memory for 1 hour. This saves time and
    ```bash
    node --watch index.js
    ```
+
 
